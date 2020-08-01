@@ -1,5 +1,6 @@
 const Blockchain = require('./blockchain');
 const Block = require('./block');
+const cryptoHash = require('./crypto-hash');
 
 describe('Blockchain', () => {
     let blockchain, newChain, originalChain, errorMock;
@@ -56,6 +57,28 @@ describe('Blockchain', () => {
                     expect(Blockchain.isValidChain(blockchain.chain)).toBe(false);
                 });
             });
+
+            describe('when the chain contains a block with a jumped difficulty', () => {
+                it('returns false', () => {
+                    const lastBlock = blockchain.chain[blockchain.chain.length - 1];
+                    const lastHash = lastBlock.hash;
+                    const timestamp = Date.now();
+                    const nonce = 0;
+                    const data = [];
+                    const difficulty = lastBlock.difficulty - 3;
+
+                    const hash = cryptoHash(timestamp, lastHash, difficulty, nonce, data);
+                    
+                    const badBlock = new Block({
+                        timestamp, lastHash, hash, nonce, difficulty, data
+                    });
+
+                    blockchain.chain.push(badBlock);
+                    expect(Blockchain.isValidChain(blockchain.chain)).toBe(false);
+
+                });
+            });
+            
             
             describe('and the chain does not contain any invalid blocks', () => {
                 it('returns true', () => {
@@ -71,7 +94,7 @@ describe('Blockchain', () => {
     describe('replaceChain()', () => {
         let logMock;
 
-        // Create temporary methods for tests
+        // Create a temporary method for tests
         beforeEach(() => {
             logMock = jest.fn();
             global.console.log = logMock;
