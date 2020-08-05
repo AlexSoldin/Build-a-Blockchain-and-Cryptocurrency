@@ -1,6 +1,6 @@
-const Blockchain = require('./blockchain');
+const Blockchain = require('./index');
 const Block = require('./block');
-const cryptoHash = require('./crypto-hash');
+const { cryptoHash } = require('../util/');
 
 describe('Blockchain', () => {
     let blockchain, newChain, originalChain, errorMock;
@@ -111,8 +111,7 @@ describe('Blockchain', () => {
             });
 
             it('logs an error', () => {
-                // expect(errorMock).toHaveBeenCalled();
-                expect(logMock).toHaveBeenCalled();
+                expect(errorMock).toHaveBeenCalled();
             });
         });
 
@@ -134,8 +133,7 @@ describe('Blockchain', () => {
                 });
 
                 it('logs an error', () => {
-                    // expect(errorMock).toHaveBeenCalled();
-                    expect(logMock).toHaveBeenCalled();
+                    expect(errorMock).toHaveBeenCalled();
                 });
             });
             
