@@ -10,4 +10,3 @@ const verifySignature = ({ publicKey, data, signature }) => {
 };
 
 module.exports = { ec, verifySignature, cryptoHash };
-
